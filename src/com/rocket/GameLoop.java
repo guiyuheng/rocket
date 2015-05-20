@@ -45,6 +45,7 @@ public class GameLoop extends SurfaceView implements Runnable,
 	boolean leftPressed = false;
 	boolean rightPressed = false;
 	boolean gameover = false;
+	boolean touchground = false;
 	Canvas canvas;
 
 	float x, y;
@@ -174,8 +175,13 @@ public class GameLoop extends SurfaceView implements Runnable,
 					// Draw the landing place
 					canvas.drawRect(landingx + 5, landingy, landingx + landingw
 							- 5, landingy - 5, landPaint);
-					boolean bottomLeft = contains(xcor, ycor, x - 25, y + 25);
-					boolean bottomRight = contains(xcor, ycor, x + 25, y + 25);
+					//Check is the bottom of the rocket touch the terrain
+					for(int i=0; i<=50; i++){
+						boolean bottom = contains(xcor, ycor, x - 25+i, y + 25);
+						if (bottom){
+							touchground = true;
+						}
+					}
 					boolean landing = landing(xcor, ycor, x, y + 25);
 					// If no control button is pressed stop playing thrusters
 					// sound
@@ -183,8 +189,8 @@ public class GameLoop extends SurfaceView implements Runnable,
 							&& thrustersPlay.isPlaying()) {
 						thrustersPlay.pause();
 					}
-					// If the rocket is inside the terrain
-					if (bottomLeft || bottomRight) {
+					// If the rocket is touch the terrain
+					if (touchground) {
 						// If rocket is not landing it will crush
 						if (!landing) {
 							canvas.drawCircle(x, y - 25, 60, crushPaint);
@@ -203,6 +209,7 @@ public class GameLoop extends SurfaceView implements Runnable,
 							// After landing rocket will be refueled.
 							fuel = INITIAL_FUEL;
 							landingPlay.start();
+							touchground = false;
 						}
 					} else {
 						// Control the rocket by pressing the button
@@ -371,10 +378,12 @@ public class GameLoop extends SurfaceView implements Runnable,
 	// reset the game when restart button is clicked
 	public void reset() {
 		gameover = false;
+		touchground = false;
 
 		x = width / 2;
 		y = 0;
-		t = 0;
+		t = INITIAL_TIME;
+		fuel=INITIAL_FUEL;
 		init();
 		//stop playing sound and prepare for next time
 		if (crushPlay.isPlaying()) {
