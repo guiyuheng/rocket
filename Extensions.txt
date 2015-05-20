@@ -1,0 +1,7 @@
+4 extras effects have been done
+
+
+1 randomised terrain generation: each time the game is played the terrain is different
+2 wrap around terrain: when a player goes to a left or right game boundary instead of being blocked they will pass through to the opposite side of the game field
+3 sounds effects: crashes, landings, rocket/thruster fire
+4 new graphics: new space craft models and new terrain textures
